@@ -1,5 +1,7 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Lost : State
 {
@@ -7,7 +9,11 @@ public class Lost : State
 
     public override IEnumerator Start()
     {
-        Debug.Log("YOU LOSE!!!!!!!" + ((Team)RoundSystem.RoundIndex) + " WINS!!!!");
-        yield return new WaitForSeconds(2f);
+        RoundSystem.Canva.SetActive(true);
+        RoundSystem.Canva.GetComponentInChildren<TextMeshProUGUI>().text = "YOU LOSE!";
+
+        yield return new WaitForSeconds(4f);
+
+        SceneManager.LoadScene(0);
     }
 }

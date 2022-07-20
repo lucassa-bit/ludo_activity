@@ -16,8 +16,8 @@ public class IATurn : State
             yield break;
         }
 
-        yield return new WaitForSeconds(0.5f);
-        RoundSystem.StartCoroutine(PlayDice());
+        yield return RoundSystem.StartCoroutine(PlayDice());
+
         RoundSystem.NextPlayer();
         RoundSystem.SetState(RoundSystem.RoundIndex == RoundSystem.playerIndex
             ? new PlayerTurn(RoundSystem)
@@ -29,18 +29,23 @@ public class IATurn : State
         int Addition = RoundSystem.Dice.GetComponent<Dice>().ShakeDice();
         List<Piece> pieces = RoundSystem.GetPieces();
 
-        if(pieces.Count <= 0)
+        yield return new WaitForSeconds(1.5f);
+
+        if (pieces.Count <= 0)
         {
             RoundSystem.SetState(new Lost(RoundSystem));
         } 
         else
         {
             if (pieces.TrueForAll((valor) => !valor.IsOnBoard))
-                RoundSystem.GameManager.MovementInsideBoard(Addition, pieces.ToArray()[0]);
+            {
+                RoundSystem.GameManager.MovementInsideBoard(Addition, pieces.ToArray()[pieces.Count - 1]);
+            }
             else
             {
                 Piece EndingPiece = pieces.Find((valor) => (Addition + valor.Steps) == 51);
                 Piece KillerPiece = CanKill(RoundSystem.Spawner.GetComponentsInChildren<Piece>(), pieces.ToArray(), Addition);
+
                 if (EndingPiece != null)
                 {
                     RoundSystem.GameManager.MovementInsideBoard(Addition, EndingPiece);
@@ -55,7 +60,7 @@ public class IATurn : State
                 }
                 else
                 {
-                    RoundSystem.GameManager.MovementInsideBoard(Addition, WhoIsMoreDistant(pieces.ToArray()));
+                    RoundSystem.GameManager.MovementInsideBoard(Addition, WhoIsMoreDistant(pieces.FindAll((value) => value.IsOnBoard).ToArray()));
                 }
             }
         }

@@ -12,23 +12,13 @@ public class Dice : MonoBehaviour
     {
         DiceAnimator = GetComponent<Animator>();
         DiceRenderer = GetComponent<SpriteRenderer>();
+        DiceAnimator.enabled = false;
     }
 
     public int ShakeDice()
     {
-        DiceAnimator.enabled = true;
-        DiceAnimator.SetTrigger("Shake");
-
         int valorRandom = Random.Range(0, DiceImagesList.Count);
-        StartCoroutine(ExecuteAfterTime(DiceAnimationDelay, valorRandom));
+        DiceRenderer.sprite = DiceImagesList[valorRandom];
         return valorRandom + 1;
-    }
-
-    IEnumerator<WaitForSeconds> ExecuteAfterTime(float time, int index)
-    {
-        yield return new WaitForSeconds(time);
-        DiceAnimator.enabled = false;
-        DiceRenderer.sprite = DiceImagesList[index];
-
     }
 }

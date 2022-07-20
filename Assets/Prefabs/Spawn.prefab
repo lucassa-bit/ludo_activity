@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f084d2a47c604d40a4ef0ebc2c7f202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnNum: 4
   SpawnPrefab:
   - {fileID: 6834292733517915810, guid: 090818099b5ef774b8a09f7dea1ace04, type: 3}
   - {fileID: 3040397455197592684, guid: eb5f1a21466618d4eb8a9e1950f7f057, type: 3}
@@ -55,3 +54,4 @@ MonoBehaviour:
   - {x: 2.75, y: 2.916, z: 0}
   - {x: -2.898, y: -3.01, z: 0}
   - {x: 3.16, y: -3.03, z: 0}
+  SpawnNum: 4

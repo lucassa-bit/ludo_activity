@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -12,6 +13,31 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int IndexPiece;
     public Team TeamPiece;
+
+    public float timer = 0;
+    public bool canStart = false;
+
+    public static GameManager Instance;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            DontDestroyOnLoad(gameObject);
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+    private void Update()
+    {
+        if(canStart)
+        {
+            timer += Time.deltaTime;
+        }
+    }
 
     public void MovementInsideBoard(int addition, Piece piece)
     {
@@ -60,19 +86,18 @@ public class GameManager : MonoBehaviour
 
         int shakeDice = dice.ShakeDice();
 
-        round.Button.SetActive(false);
-        if (round.GetPieces().TrueForAll((value) => !value.IsOnBoard) && shakeDice != 6)
-        {
-            round.NextPlayer();
-            round.SetState(new IATurn(round));
-
-            yield break;
-        }
-
         while (piece == null)
         {
-            Debug.Log(round.GetPieces().FindAll((value) => value.HasBeenKilled).Count);
-            yield return StartCoroutine(click.ClickToGo());
+            round.Button.SetActive(false);
+            if (rulesForPlayerDice(shakeDice, round))
+            {
+                round.NextPlayer();
+                round.SetState(new IATurn(round));
+
+                yield break;
+            }
+
+            yield return StartCoroutine(click.ClickToGo(shakeDice));
             piece = click.Piece;
         }
 
@@ -88,5 +113,16 @@ public class GameManager : MonoBehaviour
     public void clickButton()
     {
         StartCoroutine(PlayerPlay());
+        if(!canStart) canStart = !canStart;
+    }
+
+    public bool rulesForPlayerDice(int shakeDice, RoundSystem round)
+    {
+        List<Piece> pieces = round.GetPieces();
+
+        return (pieces.TrueForAll((value) => !value.IsOnBoard) && shakeDice != 6) 
+            || (pieces.FindAll((value) => value.IsOnBoard).Count != 0 
+                && (pieces.FindAll((value) => value.IsOnBoard && (value.Steps + shakeDice) > 51).Count
+                    == pieces.FindAll((value) => value.IsOnBoard).Count));
     }
 }

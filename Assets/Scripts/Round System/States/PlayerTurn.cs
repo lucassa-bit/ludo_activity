@@ -8,7 +8,14 @@ public class PlayerTurn : State
 
     public override IEnumerator Start()
     {
-        RoundSystem.Button.SetActive(true);
+        if(RoundSystem.GetPieces().Count <= 0)
+        {
+            RoundSystem.SetState(new Won(RoundSystem));
+        }
+        else
+        {
+            RoundSystem.Button.SetActive(true);
+        }
         yield break;
     }
 }

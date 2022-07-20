@@ -1,5 +1,8 @@
 using System.Collections;
+using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Won : State
 {
@@ -7,6 +10,17 @@ public class Won : State
 
     public override IEnumerator Start()
     {
-        yield return new WaitForSeconds(2f);
+        RoundSystem.Canva.SetActive(true);
+        RoundSystem.Canva.GetComponentInChildren<TextMeshProUGUI>().text = "YOU WON!";
+
+        yield return new WaitForSeconds(4f);
+        RoundSystem.GameManager.canStart = false;
+
+        RoundSystem.GameManager.gameObject.GetComponent<Database>()
+            .Inserir(((Team)RoundSystem.RoundIndex).ToString(), (int)RoundSystem.GameManager.timer);
+
+        RoundSystem.GameManager.timer = 0;
+
+        SceneManager.LoadScene(0);
     }
 }

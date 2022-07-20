@@ -3,23 +3,24 @@ using UnityEngine;
 
 public class RoundSystem : StateMachine
 {
-    [HideInInspector] public GameObject Spawner;
+    public GameObject Spawner;
+    public GameObject Canva;
     [HideInInspector] public GameManager GameManager;
 
     [HideInInspector] public int NumPlayers;
     [HideInInspector] public int RoundIndex = 0;
+    [HideInInspector] public int playerIndex;
+
 
     public GameObject Dice;
     public GameObject Button;
-
-    public int playerIndex;
 
 
     public void Start()
     {
         SetState(new Begin(this));
-        Spawner = GameObject.Find("Spawn");
         GameManager= GameObject.Find("GameManager").GetComponent<GameManager>();
+        playerIndex = (int)GameManager.TeamPiece;
         NumPlayers = Spawner.GetComponent<SpawnScript>().SpawnNum;
     }
 

@@ -32,13 +32,13 @@ public class Piece : MonoBehaviour
         if (Position < 0) defineSpawnPoint();
         Vector3 pickDiference = newPosition - gO.transform.position;
         gO.position += pickDiference;
-        Debug.Log("Attacker: " + gameObject.GetComponent<Transform>().parent.name + " " + gameObject.name);
+        //Debug.Log("Attacker: " + gameObject.GetComponent<Transform>().parent.name + " " + gameObject.name);
 
         foreach (Piece children in gO.parent.parent.GetComponentsInChildren<Piece>())
         {
             if (children.TeamEnum != TeamEnum && children.Position == this.Position)
             {
-                Debug.Log("Victim: " + children.gameObject.GetComponent<Transform>().parent.name + " " + children.gameObject.name);
+                //Debug.Log("Victim: " + children.gameObject.GetComponent<Transform>().parent.name + " " + children.gameObject.name);
                 children.deathApplication();
                 break;
             }
